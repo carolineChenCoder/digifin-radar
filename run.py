@@ -8,7 +8,14 @@ import sys
 
 import yaml
 
-from radar.dedupe import collapse_duplicates, filter_unseen, load_seen, mark_seen, save_seen
+from radar.dedupe import (
+    collapse_duplicates,
+    filter_fresh,
+    filter_unseen,
+    load_seen,
+    mark_seen,
+    save_seen,
+)
 from radar.fetch import fetch_all
 from radar.notify import send_cards
 from radar.render import build_cards
@@ -63,12 +70,14 @@ def main():
     seen = load_seen(SEEN_PATH)
     deduped = collapse_duplicates(all_entries)
     unseen = filter_unseen(deduped, seen)
+    max_age_days = keywords_cfg.get("max_age_days", {}).get(args.mode)
+    fresh = filter_fresh(unseen, max_age_days)
     print(
         f"\n抓到 {len(all_entries)} 条，去重后 {len(deduped)} 条，"
-        f"排除已发送后剩 {len(unseen)} 条新内容"
+        f"排除已发送后剩 {len(unseen)} 条，排除 {max_age_days} 天前的旧内容后剩 {len(fresh)} 条"
     )
 
-    by_category, all_scored = select_entries(unseen, keywords_cfg, args.mode)
+    by_category, all_scored = select_entries(fresh, keywords_cfg, args.mode)
     print_score_report(all_scored, keywords_cfg["threshold"][args.mode])
 
     total_selected = sum(len(v) for v in by_category.values())

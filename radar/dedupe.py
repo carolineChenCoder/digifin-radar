@@ -98,6 +98,34 @@ def filter_unseen(entries, seen):
     return [e for e in entries if e.get("_fingerprint") not in seen]
 
 
+def filter_fresh(entries, max_age_days):
+    """丢弃发布时间早于 max_age_days 的条目。
+
+    周更/月更的源（如 Net Interest）的 RSS feed 里常年带着几个月前的旧文章，
+    "没在 seen.json 里出现过"不代表"新鲜"——没有这层过滤，老文章会挤占
+    本该属于当天新内容的名额。没有 published 字段的条目视为无法判断，予以保留。
+    """
+    if not max_age_days:
+        return entries
+    cutoff = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(
+        days=max_age_days
+    )
+    fresh = []
+    for e in entries:
+        published = e.get("published")
+        if not published:
+            fresh.append(e)
+            continue
+        try:
+            pub_dt = datetime.datetime.fromisoformat(published)
+        except ValueError:
+            fresh.append(e)
+            continue
+        if pub_dt >= cutoff:
+            fresh.append(e)
+    return fresh
+
+
 def mark_seen(seen, entries):
     now_iso = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
     for entry in entries:

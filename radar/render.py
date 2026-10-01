@@ -55,7 +55,8 @@ def _build_footer(results, total_entries):
     failed = [r for r in results if not r["ok"]]
     text = f"共 {total_entries} 条 / 扫描 {len(results)} 源"
     if failed:
-        text += f" · {len(failed)} 源抓取失败"
+        names = "、".join(r["source_name"] for r in failed)
+        text += f" · 抓取失败：{names}"
     return {"tag": "note", "elements": [{"tag": "plain_text", "content": text}]}
 
 

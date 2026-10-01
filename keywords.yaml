@@ -4,6 +4,14 @@ threshold:
   weekly: 3
 max_per_category: 8
 
+# 新鲜度过滤：RSS feed 里经常带着发布多日/数月前的旧文章（尤其是周更/月更的源，
+# 比如 Net Interest），只靠 seen.json 去重不够——"没发过"不等于"新鲜"。
+# 超过这个天数的条目直接在打分前丢弃，不占 max_per_category 的名额。
+# 没有发布时间字段的条目不受影响（照常保留），避免误伤缺日期信息的源。
+max_age_days:
+  daily: 4
+  weekly: 10
+
 category_order: [tokenization, regulation, market]
 
 category_labels:
