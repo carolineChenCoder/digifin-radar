@@ -1,0 +1,162 @@
+defaults:
+  timeout: 15
+  user_agent: "Mozilla/5.0 (compatible; DigiFinRadar/1.0; +https://github.com/carolineChenCoder/digifin-radar)"
+
+sources:
+  # ---- tokenization / CBDC / stablecoin ----
+  - id: ledger-insights
+    name: Ledger Insights
+    type: rss
+    url: https://www.ledgerinsights.com/feed/
+    categories: [tokenization]
+    weight: 3
+
+  - id: bis-press
+    name: BIS 新闻稿
+    type: rss
+    url: https://www.bis.org/doclist/all_pressrels.rss
+    categories: [tokenization, regulation]
+    weight: 3
+
+  - id: bis-working-papers
+    name: BIS 工作论文
+    type: rss
+    url: https://www.bis.org/doclist/wppubls.rss
+    categories: [tokenization]
+    weight: 2
+
+  - id: coindesk
+    name: CoinDesk
+    type: rss
+    url: https://www.coindesk.com/arc/outboundfeeds/rss/
+    categories: [tokenization]
+    weight: 0
+
+  - id: theblock
+    name: The Block
+    type: rss
+    url: https://www.theblock.co/rss.xml
+    categories: [tokenization, market]
+    weight: 0
+
+  - id: fintech-blueprint
+    name: The Fintech Blueprint
+    type: rss
+    url: https://thefintechblueprint.substack.com/feed
+    categories: [tokenization, market]
+    weight: 2
+
+  # ---- regulation ----
+  - id: fintech-business-weekly
+    name: Fintech Business Weekly
+    type: rss
+    url: https://fintechbusinessweekly.substack.com/feed
+    categories: [regulation]
+    weight: 3
+
+  - id: esma
+    name: ESMA
+    type: rss
+    url: https://www.esma.europa.eu/rss.xml
+    categories: [regulation]
+    weight: 2
+
+  - id: eba
+    name: EBA
+    type: rss
+    url: https://www.eba.europa.eu/rss.xml
+    categories: [regulation]
+    weight: 2
+
+  - id: fed-press
+    name: Federal Reserve
+    type: rss
+    url: https://www.federalreserve.gov/feeds/press_all.xml
+    categories: [regulation]
+    weight: 1
+
+  - id: boe-news
+    name: Bank of England
+    type: rss
+    url: https://www.bankofengland.co.uk/rss/news
+    categories: [regulation]
+    weight: 1
+
+  - id: federal-register
+    name: Federal Register
+    type: federal_register
+    terms: ["stablecoin", "payment stablecoin", "digital asset", "tokenization", "GENIUS Act"]
+    doc_types: [RULE, PRORULE]
+    # 白名单限定到金融监管机构：避免 "digital asset"/"tokenization" 等词在核能、
+    # 环保等无关机构文档的全文模糊检索中误命中（已实测命中过核反应堆执照监管文档）
+    agencies:
+      - treasury-department
+      - federal-reserve-system
+      - comptroller-of-the-currency
+      - federal-deposit-insurance-corporation
+      - financial-crimes-enforcement-network
+      - securities-and-exchange-commission
+      - commodity-futures-trading-commission
+      - consumer-financial-protection-bureau
+    categories: [regulation]
+    weight: 2          # 降权：机构白名单仍可能混入与数字金融无关的常规监管文书（如制裁执照），
+                        # 靠关键词打分而非高权重来决定是否入选
+
+  - id: gnews-apac-reg
+    name: APAC 监管（Google News）
+    type: google_news
+    query: '"stablecoin" OR "digital asset" (HKMA OR "Monetary Authority of Singapore" OR FCA OR "Hong Kong Monetary Authority")'
+    categories: [regulation]
+    weight: 1
+
+  # ---- market / VC ----
+  - id: net-interest
+    name: Net Interest
+    type: rss
+    url: https://www.netinterest.co/feed
+    categories: [market]
+    weight: 3
+
+  - id: fintech-takes
+    name: Fintech Takes
+    type: rss
+    url: https://newsletter.fintechtakes.com/feed
+    categories: [regulation, market]
+    weight: 2
+
+  - id: sifted
+    name: Sifted
+    type: rss
+    url: https://sifted.eu/feed
+    categories: [market]
+    weight: 1
+
+  - id: pymnts
+    name: PYMNTS
+    type: rss
+    url: https://www.pymnts.com/feed/
+    categories: [market]
+    weight: 0
+
+  - id: a16z-crypto
+    name: a16z crypto
+    type: rss
+    url: https://a16zcrypto.com/feed/
+    categories: [market, tokenization]
+    weight: 1
+
+  # ---- all-category wire ----
+  - id: finextra
+    name: Finextra
+    type: rss
+    url: https://www.finextra.com/rss/headlines.aspx
+    categories: [tokenization, regulation, market]
+    weight: 0
+
+  # ---- data snapshot (weekly only) ----
+  - id: defillama-stablecoins
+    name: DefiLlama 稳定币数据
+    type: defillama
+    categories: [tokenization]
+    weight: 5          # 数据快照本身就是结论，不需要靠关键词加分
+    weekly_only: true

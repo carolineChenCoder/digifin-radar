@@ -1,0 +1,135 @@
+# 打分阈值与每类上限
+threshold:
+  daily: 4
+  weekly: 3
+max_per_category: 8
+
+category_order: [tokenization, regulation, market]
+
+category_labels:
+  tokenization: "🪙 CBDC / 稳定币 / 代币化"
+  regulation: "⚖️ 监管与合规"
+  market: "📈 创投与市场格局"
+
+categories:
+  tokenization:
+    strong:
+      - stablecoin
+      - stablecoins
+      - CBDC
+      - tokenization
+      - tokenisation
+      - tokenized
+      - tokenised
+      - RWA
+      - "digital euro"
+      - "digital pound"
+      - "digital yuan"
+      - "tokenized deposit"
+      - "tokenised deposit"
+      - "wholesale CBDC"
+      - "retail CBDC"
+      - mBridge
+      - Agora
+      - Agorá
+      - "digital asset"
+    weak:
+      - settlement
+      - "cross-border payment"
+      - custody
+      - "reserve asset"
+      - blockchain
+      - DeFi
+
+  regulation:
+    # 只放数字金融/加密资产监管特有的词。像 "regulation"/"license"/"sanctions"/
+    # "supervisory" 这类泛化词会命中几乎所有联邦监管文书（核能、环保、移民……），
+    # 已实测导致核反应堆执照文档、委内瑞拉制裁通知等无关内容入选，故降级放入 weak。
+    strong:
+      - "GENIUS Act"
+      - MiCA
+      - "payment stablecoin"
+      - "stablecoin issuer"
+      - "virtual asset"
+      - "crypto asset"
+      - "digital asset"
+      - "anti-money laundering"
+      - AML
+      - NPRM
+      - "proposed rule"
+      - "final rule"
+      - "consent order"
+      - FATF
+      - FSB
+      - "Basel Committee"
+    weak:
+      - license
+      - licence
+      - licensing
+      - enforcement
+      - sanctions
+      - supervisory
+      - regulator
+      - regulation
+      - "central bank"
+      - compliance
+      - guidance
+      - consultation
+      - framework
+      - oversight
+
+  market:
+    # "funding"/"valuation"/"IPO" 这类词是通用科技创投词汇，Sifted/a16z 这类源覆盖
+    # 全科技赛道，不加限制会把 AI 芯片、可穿戴设备等无关融资新闻也收进来（已实测）。
+    # domain 是一道额外关卡：必须同时命中金融/支付相关词，纯 VC 词不够格。
+    domain:
+      - fintech
+      - "financial technology"
+      - neobank
+      - "challenger bank"
+      - "digital bank"
+      - payments
+      - banking
+      - lending
+      - stablecoin
+      - crypto
+      - "digital asset"
+      - wealthtech
+      - insurtech
+      - regtech
+      - "embedded finance"
+      - BaaS
+      - remittance
+    strong:
+      - "Series A"
+      - "Series B"
+      - "Series C"
+      - "Series D"
+      - funding
+      - raised
+      - valuation
+      - acquisition
+      - acquires
+      - IPO
+      - "market share"
+      - venture
+      - "raises $"
+    weak:
+      - partnership
+      - launch
+      - expansion
+      - investment
+
+noise:
+  - "price prediction"
+  - "could surge"
+  - "to the moon"
+  - airdrop
+  - memecoin
+  - meme coin
+  - "best crypto to buy"
+  - giveaway
+  - "technical analysis"
+  - horoscope
+  - "price today"
+  - "all-time high"
